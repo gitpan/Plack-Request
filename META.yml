@@ -1,0 +1,34 @@
+---
+abstract: 'Portable HTTP request object from PSGI env hash'
+author:
+  - 'Kazuhiro Osawa'
+build_requires:
+  ExtUtils::MakeMaker: 6.42
+  Test::More: 0
+configure_requires:
+  ExtUtils::MakeMaker: 6.42
+distribution_type: module
+generated_by: 'Module::Install version 0.91'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Plack-Request
+no_index:
+  directory:
+    - inc
+    - t
+    - xt
+requires:
+  CGI::Simple::Cookie: 0
+  Class::Accessor::Fast: 0
+  Filter::Util::Call: 0
+  HTTP::Body: 1.05
+  HTTP::Message::PSGI: 0
+  LWP: 0
+  URI::QueryParam: 0
+  perl: 5.8.1
+resources:
+  license: http://dev.perl.org/licenses/
+  repository: git://github.com/miyagawa/Plack-Request.git
+version: 0.01
