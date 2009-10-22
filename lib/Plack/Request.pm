@@ -2,7 +2,7 @@ package Plack::Request;
 use strict;
 use warnings;
 use 5.008_001;
-our $VERSION = "0.03";
+our $VERSION = "0.04";
 
 use HTTP::Headers;
 use URI::QueryParam;
@@ -367,38 +367,10 @@ sub _build_uri  {
 
 sub path { shift->uri->path(@_) }
 
-sub uri_with {
-    my($self, $args) = @_;
-    
-    Carp::carp( 'No arguments passed to uri_with()' ) unless $args;
-
-    for my $value (values %{ $args }) {
-        next unless defined $value;
-        for ( ref $value eq 'ARRAY' ? @{ $value } : $value ) {
-            $_ = "$_";
-            utf8::encode( $_ );
-        }
-    };
-    
-    my $uri = $self->uri->clone;
-    
-    $uri->query_form( {
-        %{ $uri->query_form_hash },
-        %{ $args },
-    } );
-    return $uri;
-}
-
 sub new_response {
     my $self = shift;
     require Plack::Response;
     Plack::Response->new(@_);
-}
-
-sub as_http_request {
-    my $self = shift;
-    require HTTP::Request;
-    HTTP::Request->new( $self->method, $self->uri, $self->headers, $self->raw_body );
 }
 
 sub content {
@@ -441,10 +413,18 @@ web server environments.
 Note that this module is intended to be used by web application
 framework developers rather than application developers (end
 users). Writing your web application directly using Plack::Request is
-certainly possible but it's like doing so with mod_perl's
-Apache::Request: yet too low level. You're encouraged to use one of
-the web application frameworks that support PSGI, or use
-L<HTTP::Engine> if you want to write a micro web server application.
+certainly possible but not recommended: it's like doing so with
+mod_perl's Apache::Request: yet too low level.
+
+If you're writing a web application, not a framework, then you're
+encouraged to use one of the web application frameworks that support
+PSGI, or use L<HTTP::Engine> if you want to write a micro web server
+application.
+
+Also, even if you're a framework developer, you probably want to
+handle Cookies and file uploads in your own way: Plack::Request gives
+you a simple API to deal with these things but ultimately you probably
+want to implement those in your own code.
 
 =head1 METHODS
 
@@ -581,17 +561,6 @@ A convenient method to access $req->uploads.
     for my $upload ( $req->upload('field') ) {
         print $upload->filename;
     }
-
-
-=item uri_with
-
-Returns a rewritten URI object for the current request. Key/value pairs
-passed in will override existing parameters. Unmodified pairs will be
-preserved.
-
-=item as_http_request
-
-convert Plack::Request to HTTP::Request.
 
 =item new_response
 
