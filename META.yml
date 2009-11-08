@@ -4,7 +4,9 @@ author:
   - 'Kazuhiro Osawa'
 build_requires:
   ExtUtils::MakeMaker: 6.42
+  Test::Exception: 0
   Test::More: 0
+  Test::Requires: 0
 configure_requires:
   ExtUtils::MakeMaker: 6.42
 distribution_type: module
@@ -26,10 +28,11 @@ requires:
   Class::Accessor::Fast: 0
   Filter::Util::Call: 0
   HTTP::Body: 1.05
-  LWP: 0
+  HTTP::Headers: 0
+  HTTP::Request: 0
   URI::QueryParam: 0
   perl: 5.8.1
 resources:
   license: http://dev.perl.org/licenses/
   repository: git://github.com/miyagawa/Plack-Request.git
-version: 0.05
+version: 0.06
