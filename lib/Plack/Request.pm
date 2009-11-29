@@ -2,7 +2,7 @@ package Plack::Request;
 use strict;
 use warnings;
 use 5.008_001;
-our $VERSION = "0.06";
+our $VERSION = "0.07";
 
 use HTTP::Headers;
 use URI::QueryParam;
@@ -31,6 +31,10 @@ sub port        { $_[0]->env->{SERVER_PORT} }
 sub user        { $_[0]->env->{REMOTE_USER} }
 sub request_uri { $_[0]->env->{REQUEST_URI} }
 sub url_scheme  { $_[0]->env->{'psgi.url_scheme'} }
+
+sub secure {
+    $_[0]->url_scheme eq 'https';
+}
 
 # we need better cookie lib?
 # http://mark.stosberg.com/blog/2008/12/cookie-handling-in-titanium-catalyst-and-mojo.html
@@ -356,7 +360,7 @@ sub _build_uri  {
 
     my $uri = ($env->{'psgi.url_scheme'} || "http") .
         "://" .
-        ($env->{HTTP_HOST} || ($env->{SERVER_NAME} || "") . ":" . ($env->{SERVER_PORT} || 80)) .
+        ($env->{HTTP_HOST} || (($env->{SERVER_NAME} || "") . ":" . ($env->{SERVER_PORT} || 80))) .
         "/" .
         ($path || "") .
         ($env->{QUERY_STRING} ? "?$env->{QUERY_STRING}" : "");
@@ -458,8 +462,9 @@ Returns the request uri (like $ENV{REQUEST_URI})
 
 =item query_parameters
 
-Returns a reference to a hash containing query string (GET) parameters. Values can                                                    
-be either a scalar or an arrayref containing scalars.
+Returns a reference to a hash containing query string (GET)
+parameters. Values can be either a scalar or an arrayref containing
+scalars.
 
 =item secure
 
