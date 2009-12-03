@@ -2,7 +2,7 @@ package Plack::Request;
 use strict;
 use warnings;
 use 5.008_001;
-our $VERSION = "0.07";
+our $VERSION = "0.08";
 
 use HTTP::Headers;
 use URI::QueryParam;
@@ -238,7 +238,9 @@ sub body_params  { shift->body_parameters(@_) }
 sub input        { shift->body(@_) }
 sub params       { shift->parameters(@_) }
 sub query_params { shift->query_parameters(@_) }
-sub path_info    { shift->path(@_) }
+
+sub path_info    { shift->env->{PATH_INFO} }
+sub script_name  { shift->env->{SCRIPT_NAME} }
 
 sub cookie {
     my $self = shift;
